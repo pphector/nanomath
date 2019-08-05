@@ -33,6 +33,7 @@ class Stats(object):
         self.median_read_length = np.median(df["lengths"])
         self.mean_read_length = np.mean(df["lengths"])
         self.n50 = get_N50(np.sort(df["lengths"]))
+        self.l50 = get_L50(np.sort(df["lengths"]))
         if "percentIdentity" in df:
             self.average_identity = np.mean(df["percentIdentity"])
             self.median_identity = np.median(df["percentIdentity"])
@@ -58,6 +59,12 @@ def get_N50(readlengths):
     """
     return readlengths[np.where(np.cumsum(readlengths) >= 0.5 * np.sum(readlengths))[0][0]]
 
+def get_L50(readlengths):
+    """Calculate read length N50.
+
+    Based on https://github.com/PapenfussLab/Mungo/blob/master/bin/fasta_stats.py
+    """
+    return np.where(np.cumsum(readlengths) >= 0.5 * np.sum(readlengths))[0][0]
 
 def remove_length_outliers(df, columnname):
     """Remove records with length-outliers above 3 standard deviations from the median."""
@@ -147,6 +154,7 @@ def write_stats(datadfs, outputfile, names=[]):
         "Median read length": "median_read_length",
         "Mean read length": "mean_read_length",
         "Read length N50": "n50",
+        "Read number L50" : "l50", 
         "Average percent identity": "average_identity",
         "Median percent identity": "median_identity",
         "Active channels": "active_channels",
