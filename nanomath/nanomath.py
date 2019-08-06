@@ -64,7 +64,7 @@ def get_L50(readlengths):
 
     Based on https://github.com/PapenfussLab/Mungo/blob/master/bin/fasta_stats.py
     """
-    return np.where(np.cumsum(readlengths) >= 0.5 * np.sum(readlengths))[0][0]
+    return len(readlengths) - np.where(np.cumsum(readlengths) >= 0.5 * np.sum(readlengths))[0][0]
 
 def remove_length_outliers(df, columnname):
     """Remove records with length-outliers above 3 standard deviations from the median."""
